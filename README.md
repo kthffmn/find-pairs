@@ -1,4 +1,4 @@
-# Coding Challenge
+# Finding Pairs
 
 ## Instructions
 
