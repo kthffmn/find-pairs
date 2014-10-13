@@ -5,17 +5,17 @@ class Analyzer
   def initialize(input_path, output_path, threshold, k, m)
     @threshold = threshold
     @output_path = output_path
-    @pair_counts = CountMinSketch.new(k, m)
     @data = load_file(input_path)
+    @pair_counts = CountMinSketch.new(k, m)
     @results = Set.new
     @verified_results = Set.new
   end
 
   def self.run(input_path, output_path, threshold, k=10, m=100000)
-    self.new(input_path, output_path, threshold, k, m)
-    self.find_pairs
-    self.verify_results
-    self.save
+    analyzer = self.new(input_path, output_path, threshold, k, m)
+    analyzer.find_pairs
+    analyzer.verify_results
+    analyzer.save
   end
 
   def verify_results
