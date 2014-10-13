@@ -14,9 +14,7 @@ class Analyzer
   def self.run(input_path, output_path, threshold, k=10, m=100000)
     analyzer = self.new(input_path, output_path, threshold, k, m)
     analyzer.find_pairs
-    binding.pry
     analyzer.verify_results
-    binding.pry
     analyzer.save
   end
 
@@ -30,7 +28,6 @@ class Analyzer
       bands.each_with_index do |left_band, i|
         bands[i + 1..-1].each do |right_band|
           self.pair = "#{left_band},#{right_band}"
-          binding.pry
           if verify
             update_verified_results(verified_pair_counts)
           else
