@@ -65,5 +65,4 @@ class Analyzer
       file.write(verified_results.to_a.join("\n"))
     end
   end
-
 end
