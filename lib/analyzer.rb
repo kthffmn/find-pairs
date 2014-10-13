@@ -14,7 +14,9 @@ class Analyzer
   def self.run(input_path, output_path, threshold, k=10, m=100000)
     analyzer = self.new(input_path, output_path, threshold, k, m)
     analyzer.find_pairs
+    binding.pry
     analyzer.verify_results
+    binding.pry
     analyzer.save
   end
 
@@ -27,7 +29,8 @@ class Analyzer
     data.each_with_index do |bands, index|
       bands.each_with_index do |left_band, i|
         bands[i + 1..-1].each do |right_band|
-          self.pair = "#{left_band}, #{right_band}"
+          self.pair = "#{left_band},#{right_band}"
+          binding.pry
           if verify
             update_verified_results(verified_pair_counts)
           else
@@ -41,14 +44,14 @@ class Analyzer
   def update_results
     unless results.include?(pair)
       num = pair_counts.insert(pair)
-      results << pair if num >= 50
+      results << pair if num >= threshold
     end
   end
 
   def update_verified_results(verified_pair_counts)
     if results.include?(pair) && !verified_results.include?(pair)
       num = verified_pair_counts[pair] += 1
-      verified_results << pair if num >= 50
+      verified_results << pair if num >= threshold
     end
   end
 
