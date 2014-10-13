@@ -1,7 +1,7 @@
 describe "Analyzer" do
   
-  let(:analyzer)  { Analyzer.new("spec/support/short.txt",  "spec/results/short_result.txt",  2, 10, 100000) }
-  let(:run)       { Analyzer.run("spec/support/short.txt",  "spec/results/short_result.txt",  2) }
+  let(:analyzer)  { Analyzer.new("spec/support/short.txt",  "spec/tmp/short_result.txt",  2, 10, 100000) }
+  let(:run)       { Analyzer.run("spec/support/short.txt",  "spec/tmp/short_result.txt",  2) }
   let(:results)   { {"short" => "Chvrches,Valerie June", "medium" => "Miranda Lambert,The Flaming Lips", "long" => "Chvrches,St. Vincent"} }
   
   describe "#initialize" do
@@ -29,7 +29,7 @@ describe "Analyzer" do
     end
 
     it "accepts optional arguments of k and m" do
-      expect { Analyzer.run("spec/support/long.txt", "spec/results/long_result.txt", 4, 15, 10000) }.to_not raise_error
+      expect { Analyzer.run("spec/support/long.txt", "spec/tmp/long_result.txt", 4, 15, 10000) }.to_not raise_error
     end
 
     it "saves the pair that is repeated at least 'threshold' times in the input to the output" do

@@ -1,8 +1,8 @@
 # Finding Pairs
 
-## Instructions
+## About
 
-The attached text file "artist_list.txt", in the `data` folder, contains the favorite musical artists of 1000 users from LastFM. Each line is a list of up to 50 artists, formatted as follows:
+The attached text file "artist_list.txt", in the `data` folder, contains the favorite musical artists of 1000 users from [LastFM](http://www.last.fm/). Each line is a list of up to 50 artists, formatted as follows:
 
 ```
 Radiohead,Pulp,Morrissey,Delays,Stereophonics,Blur,Suede,Sleeper,The La's,Super Furry Animals\n
@@ -10,7 +10,11 @@ Band of Horses,Iggy Pop,The Velvet Underground,Radiohead,The Decemberists,Morris
 etc.
 ```
 
-There are 50,000 band names: 1,000 lists, 50 band names per list. Each list has 1,275 pairs: `n * ( n + 1 ) / 2`
+## Pairings
+
+Given that there are 50 bands per list, each list contains around 1,275 pairs: 
+
+`n * ( n + 1 ) / 2`
 
 ```
   50 + 49 + 48... +  3 +  2 +  1
@@ -20,11 +24,24 @@ There are 50,000 band names: 1,000 lists, 50 band names per list. Each list has 
 ```
 
 ```ruby
+num_of_lists = 1000
+
 n = 50
 total_pairs_per_list = n * ( n + 1 ) / 2
-# => 1275
+# => 1,275
+
+total_num_of_pairs = total_pairs_per_list * num_of_lists
+# => 1,275,000
 ```
 
-Using this file as input, this program produces an output file containing a list of pairs of artists which appear TOGETHER in at least fifty different lists. For example, in the above sample, Radiohead and Morrissey appear together twice, but every other pair appears only once.
+## Approach
 
-This solution does not store a list of all possible pairs of bands and instead relies on a bloom filter.
+Instead of storing over a million arrays with two elements each, representing each pair, this program uses a [counting](http://en.wikipedia.org/wiki/Bloom_filter#Counting_filters) [bloom filter](http://www.jasondavies.com/bloomfilter/) to keep track of all previously stored pairs.
+
+The hash functions were created using the [CityHash gem](https://github.com/nashby/cityhash), a [Google CityHash](https://code.google.com/p/cityhash/) wrapper.
+
+Using the file described above, this program produces an output file containing a list of pairs of artists which appear TOGETHER in at least fifty different lists. For example, in the above sample, Radiohead and Morrissey appear together twice, but every other pair appears only once.
+
+## Setup
+
+From the root of the directory in the terminal, run `bundle install`. Then `rspec` to view RSpec results or `ruby bin/runner.rb` to run the Analyzer class on the LastFM file.
