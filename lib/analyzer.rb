@@ -1,18 +1,20 @@
 class Analyzer
-  attr_reader :data, :threshold, :pair_counts, :results, :verified_results
-
-  def initialize(file_path, threshold, k, m)
+  attr_reader :data, :threshold, :pair_counts, :results, :verified_results, :output_path
+  attr_accessor :pair
+  
+  def initialize(input_path, output_path, threshold, k, m)
     @threshold = threshold
+    @output_path = output_path
     @pair_counts = CountMinSketch.new(k, m)
-    @data = load_file(file_path)
+    @data = load_file(input_path)
     @results = Set.new
     @verified_results = Set.new
   end
 
-  def self.run(file_path, threshold, k=10, m=100000)
-    self.new(file_path, threshold, k, m)
+  def self.run(input_path, output_path, threshold, k=10, m=100000)
+    self.new(input_path, output_path, threshold, k, m)
     self.find_pairs
-    self.verified_results
+    self.verify_results
     self.save
   end
 
@@ -25,31 +27,30 @@ class Analyzer
     data.each_with_index do |bands, index|
       bands.each_with_index do |left_band, i|
         bands[i + 1..-1].each do |right_band|
-          pair = "#{left_band}, #{right_band}"
+          self.pair = "#{left_band}, #{right_band}"
           if verify
-            update_verified_results(verified_pair_counts, pair)
+            update_verified_results(verified_pair_counts)
           else
-            update_results(pair)
+            update_results
           end
         end
       end
     end
   end
 
-  def update_results(pair)
+  def update_results
     unless results.include?(pair)
       num = pair_counts.insert(pair)
       results << pair if num >= 50
     end
   end
 
-  def update_verified_results(verified_pair_counts, pair)
+  def update_verified_results(verified_pair_counts)
     if results.include?(pair) && !verified_results.include?(pair)
       num = verified_pair_counts[pair] += 1
       verified_results << pair if num >= 50
     end
   end
-
 
   def load_file(file_path)
     lists = []
@@ -60,7 +61,7 @@ class Analyzer
   end
 
   def save
-    File.open("data/result.txt", 'w') do |file| 
+    File.open(output_path, 'w') do |file| 
       file.write(verified_results.to_a.join("\n"))
     end
   end
