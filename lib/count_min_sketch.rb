@@ -6,10 +6,10 @@ class CountMinSketch
 
   MAX_FIXNUM = 2**(0.size*8 - 2) - 1
 
-  attr_reader :k, :m
+  attr_reader :k, :m, :data
 
   def initialize(k, m)
-    raise 'Only 64 bit is currently supported' if m != 64
+    raise 'Only 128 bit is currently supported' if m != 128
     @k = k
     @m = m
     @data = Matrix.zero(k, m)
@@ -22,7 +22,7 @@ class CountMinSketch
 
   def insert(x, n=1)
     min_count = Float::INFINITY
-    hashes_of_x = @seeds.map { |s| CityHash.hash64(x, s) }
+    hashes_of_x = @seeds.map { |s| CityHash.hash128(x, s) }
     hashes_of_x.each_with_index do |hash, i|
       m.times do |j|
         if hash & (2 ** j) != 0
