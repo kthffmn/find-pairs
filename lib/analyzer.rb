@@ -62,7 +62,7 @@ class Analyzer
 
   def save
     File.open(output_path, 'w') do |file| 
-      file.write(verified_results.to_a.join("\n"))
+      file.write(verified_results.to_a.sort.join("\n"))
     end
   end
 end
