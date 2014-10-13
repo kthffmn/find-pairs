@@ -1,6 +1,6 @@
 describe "CountMinSketch" do
   
-  let(:count_min_sketch) { CountMinSketch.new(30, 64) } 
+  let(:count_min_sketch) { CountMinSketch.new(30, 128) } 
   let(:band) { "Sylvan Esso" }
   let(:singer) { "Valerie June" }
 
@@ -16,11 +16,11 @@ describe "CountMinSketch" do
   end
 
   describe "#initialize" do
-    it "does not raise an error initialized with an m of 64" do
+    it "does not raise an error initialized with an m of 128" do
       expect { count_min_sketch }.to_not raise_error
     end
 
-    it "raises an error initialized with an m that is not 64" do
+    it "raises an error initialized with an m that is not 128" do
       expect { CountMinSketch.new(10, 32) }.to raise_error
     end
   end
