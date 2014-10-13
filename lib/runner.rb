@@ -1,3 +1,4 @@
 require_relative '../config/environment'
 
-Analyzer.new("./data/artist_list.txt", 50)
+a = Analyzer.new("./data/artist_list.txt", 50)
+puts a.find_pairs.inspect

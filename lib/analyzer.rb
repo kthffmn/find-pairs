@@ -1,29 +1,41 @@
 class Analyzer
-  attr_reader :band_lists, :appearance_num, :count_min_sketch
-  attr_accessor :results
+  attr_reader :data, :threshold, :pair_counts
 
-  def initialize(file_path, appearance_num, k=64, m=64)
-    @appearance_num = appearance_num
-    @count_min_sketch = CountMinSketch.new(k, m)
-    @band_lists = load_file(file_path)
-    @results = []
+  def initialize(file_path, threshold, k=10, m=64)
+    @threshold = threshold
+    @pair_counts = CountMinSketch.new(k, m)
+    @data = load_file(file_path)
   end
 
   def find_pairs
-    # stuff
+    results = Set.new
+    data.each do |list|
+      list.each_with_index do |band, i|
+        j = i + 1
+        while j < list.length
+          pair = "#{band}, #{list[j]}"
+          unless results.include?(pair)
+            num = pair_counts.insert(pair)
+            results << pair if num >= 50
+          end
+          j += 1
+        end
+      end
+    end
+    results
   end
 
   def load_file(file_path)
     lists = []
     File.foreach(file_path) do |list|
-      lists << list.strip.split(",")
+      lists << list.strip.split(",").sort
     end
+    lists
   end
 
-  def save
-    final_results = results.join("\n")
+  def save(results)
     File.open("data/result.txt", 'w') do |file| 
-      file.write(final_results)
+      file.write(results.join("\n"))
     end
   end
 
