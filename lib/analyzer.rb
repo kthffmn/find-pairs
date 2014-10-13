@@ -1,6 +1,5 @@
 class Analyzer
   attr_reader :data, :threshold, :pair_counts, :results, :verified_results, :output_path
-  attr_accessor :pair
   
   def initialize(input_path, output_path, threshold, k, m)
     @threshold = threshold
@@ -27,25 +26,25 @@ class Analyzer
     data.each_with_index do |bands, index|
       bands.each_with_index do |left_band, i|
         bands[i + 1..-1].each do |right_band|
-          self.pair = "#{left_band},#{right_band}"
+          pair = "#{left_band},#{right_band}"
           if verify
-            update_verified_results(verified_pair_counts)
+            update_verified_results(verified_pair_counts, pair)
           else
-            update_results
+            update_results(pair)
           end
         end
       end
     end
   end
 
-  def update_results
+  def update_results(pair)
     unless results.include?(pair)
       num = pair_counts.insert(pair)
       results << pair if num >= threshold
     end
   end
 
-  def update_verified_results(verified_pair_counts)
+  def update_verified_results(verified_pair_counts, pair)
     if results.include?(pair) && !verified_results.include?(pair)
       num = verified_pair_counts[pair] += 1
       verified_results << pair if num >= threshold
